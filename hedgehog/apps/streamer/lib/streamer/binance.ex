@@ -7,6 +7,7 @@ defmodule Streamer.Binance do
 
   def start_link(symbol) do
     symbol = String.downcase(symbol)
+
     WebSockex.start_link(
       "#{@stream_endpoint}#{symbol}@trade",
       __MODULE__,
@@ -23,5 +24,25 @@ defmodule Streamer.Binance do
     IO.puts("Received Message - Type: #{inspect(type)} -- Message: #{inspect(msg)}")
 
     {:ok, state}
+  end
+
+  defp process_event(%{"e" => "trade"} = event) do
+    trade_event = %Streamer.Binance.TradeEvent{
+      :event_type => event["e"],
+      :event_time => event["E"],
+      :symbol => event["s"],
+      :trade_id => event["t"],
+      :price => event["p"],
+      :quantity => event["q"],
+      :buyer_order_id => event["b"],
+      :seller_order_id => event["a"],
+      :trade_time => event["T"],
+      :buyer_market_maker => event["m"]
+    }
+
+    Logger.debug(
+      "Trade event received " <>
+        "#{trade_event.symbol}@#{trade_event.price}"
+    )
   end
 end
