@@ -3,12 +3,79 @@ defmodule Naive.Trader do
 
   require Logger
 
+  alias Streamer.Binance.TradeEvent
+
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: :trader)
   end
 
-  def init(args) do
-    {:ok, args}
+  def init(%{symbol: symbol, profit_interval: profit_interval}) do
+    symbol = String.upcase(symbol)
+
+    Logger.info("Initializing new trader for #{symbol}")
+
+    tick_size = fetch_tick_size(symbol)
+
+    state = %State{
+      symbol: symbol,
+      profit_interval: profit_interval,
+      tick_size: tick_size
+    }
+
+    {:ok, state}
+  end
+
+  def handle_cast(
+        %TradeEvent{price: price},
+        %State{symbol: symbol, buy_order: nil} = state
+      ) do
+    quantity = "100"
+
+    Logger.info("Placing BUY order for #{symbol} @ #{price}, quantity: #{quantity}")
+
+    {:ok, %Binance.OrderResponse{} = order} =
+      Binance.order_limit_buy(symbol, quantity, price, "GTC")
+
+    {:noreply, %{state | buy_order: order}}
+  end
+
+  def handle_cast(
+        %TradeEvent{
+          buyer_order_id: order_id,
+          quantity: quantity
+        },
+        %State{
+          symbol: symbol,
+          buy_order: %Binance.OrderResponse{
+            price: buy_price,
+            order_id: order_id,
+            orig_qty: quantity
+          },
+          profit_interval: profit_interval,
+          tick_size: tick_size
+        } = state
+      ) do
+    sell_price = calculate_sell_price(buy_price, profit_interval, tick_size)
+
+    Logger.info(
+      "Buy order filled, placing SELL order for " <>
+        "#{symbol} @ #{sell_price}, quantity: #{quantity}"
+    )
+
+    {:ok, %Binance.OrderResponse{} = order} =
+      Binance.order_limit_sell(symbol, quantity, sell_price, "GTC")
+
+    {:noreply, %{state | sell_order: order}}
+  end
+
+  defp fetch_tick_size(symbol) do
+    Binance.get_exchange_info()
+    |> elem(1)
+    |> Map.get(:symbols)
+    |> Enum.find(&(&1["symbol"] == symbol))
+    |> Map.get("filters")
+    |> Map.find(&(&1["filterType"] == "PRICE_FILTER"))
+    |> Map.get("tickSize")
   end
 end
 
