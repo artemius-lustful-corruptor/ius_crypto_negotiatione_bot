@@ -28,7 +28,8 @@ defmodule Naive.MixProject do
     [
       {:binance, "~> 1.0"},
       {:decimal, "~> 2.0"},
-      {:streamer, in_umbrela: true}
+      {:phoenix_pubsub, "~> 2.0"},
+      {:streamer, in_umbrella: true}
     ]
   end
 end

@@ -15,7 +15,7 @@ defmodule Streamer.Binance do
     )
   end
 
-  def handle_frame({_type, msg}, state) do
+  def handle_frame({type, msg}, state) do
     case Jason.decode(msg) do
       {:ok, event} -> process_event(event)
       {:error, _} -> Logger.error("Unable to parse msg: #{msg}")
@@ -43,6 +43,12 @@ defmodule Streamer.Binance do
     Logger.debug(
       "Trade event received " <>
         "#{trade_event.symbol}@#{trade_event.price}"
+    )
+
+    Phoenix.PubSub.broadcast(
+      Streamer.PubSub,
+      "TRADE_EVENTS:#{trade_event.symbol}",
+      trade_event
     )
   end
 end
