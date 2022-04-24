@@ -12,6 +12,10 @@ import Config
 config :logger,
   level: :debug
 
+config :naive,
+  binance_client: BinanceMock
+
 if File.exists?('config/secrets.exs') do
-  import_config('secrets.exs') # Rewrite this to use env variables
+  # Rewrite this to use env variables
+  import_config('secrets.exs')
 end
