@@ -21,7 +21,7 @@ defmodule Streamer.Binance do
       {:error, _} -> Logger.error("Unable to parse msg: #{msg}")
     end
 
-    IO.puts("Received Message - Type: #{inspect(type)} -- Message: #{inspect(msg)}")
+    #IO.puts("Received Message - Type: #{inspect(type)} -- Message: #{inspect(msg)}")
 
     {:ok, state}
   end

@@ -123,7 +123,7 @@ defmodule BinanceMock do
 
     filled_sell_orders =
       order_book.sell_side
-      |> Enum.take_while(&D.gt?(trade_event, &1.price))
+      |> Enum.take_while(&D.gt?(trade_event.price, &1.price))
       |> Enum.map(&Map.replace!(&1, :status, "FILLED"))
 
     (filled_buy_orders ++ filled_sell_orders)
@@ -208,7 +208,7 @@ defmodule BinanceMock do
           order_book,
           :sell_side,
           [order | order_book.sell_side]
-          |> Enum.sort(&D.it?(&1.price, &2.price))
+          |> Enum.sort(&D.lt?(&1.price, &2.price))
         )
       else
         Map.replace!(

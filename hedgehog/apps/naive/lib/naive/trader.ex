@@ -114,7 +114,7 @@ defmodule Naive.Trader do
     |> Map.get(:symbols)
     |> Enum.find(&(&1["symbol"] == symbol))
     |> Map.get("filters")
-    |> Map.find(&(&1["filterType"] == "PRICE_FILTER"))
+    |> Enum.find(&(&1["filterType"] == "PRICE_FILTER"))
     |> Map.get("tickSize")
   end
 
