@@ -4,6 +4,7 @@ defmodule Naive.Leader do
   require Logger
 
   alias Naive.Trader
+  alias Decimal, as: D
 
   @binance_client Application.compile_env(:naive, :binance_client)
 
@@ -120,30 +121,53 @@ defmodule Naive.Leader do
   end
 
   defp fetch_symbol_settings(symbol) do
-    tick_size = fetch_tick_size(symbol)
+    symbol_filters = fetch_symbol_filters(symbol)
 
-    %{
-      symbol: symbol,
-      chunks: 1,
-      # What is it?
-      profit_interval: "-0.0012",
-      tick_size: tick_size
-    }
+    Map.merge(
+      %{
+        symbol: symbol,
+        chunks: 1,
+        # What is it?
+        buy_down_interval: "0.0001",
+        profit_interval: "-0.0012",
+        budget: 20
+      },
+      symbol_filters
+    )
   end
 
-  defp fetch_tick_size(symbol) do
-    @binance_client.get_exchange_info()
-    |> elem(1)
-    |> Map.get(:symbols)
-    |> Enum.find(&(&1["symbol"] == symbol))
-    |> Map.get("filters")
-    |> Enum.find(&(&1["filterType"] == "PRICE_FILTER"))
-    |> Map.get("tickSize")
+  defp fetch_symbol_filters(symbol) do
+    symbol_filters =
+      @binance_client.get_exchange_info()
+      |> elem(1)
+      |> Map.get(:symbols)
+      |> Enum.find(&(&1["symbol"] == symbol))
+      |> Map.get("filters")
+
+    tick_size =
+      symbol_filters
+      |> Enum.find(&(&1["filterType"] == "PRICE_FILTER"))
+      |> Map.get("tickSize")
+
+    step_size =
+      symbol_filters
+      |> Enum.find(&(&1["filterType"] == "LOT_SIZE"))
+      |> Map.get("stepSize")
+
+    %{
+      tick_size: tick_size,
+      step_size: step_size
+    }
   end
 
   defp fresh_trader_state(settings) do
     IO.inspect(settings)
-    struct(Trader.State, settings) |> IO.inspect()
+
+    %{
+      (struct(Trader.State, settings)
+       |> IO.inspect())
+      | budget: D.div(settings.budget, settings.chunks)
+    }
   end
 
   defp start_new_trader(%Trader.State{} = state) do
