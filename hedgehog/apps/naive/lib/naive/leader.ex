@@ -5,6 +5,8 @@ defmodule Naive.Leader do
 
   alias Naive.Trader
   alias Decimal, as: D
+  alias Naive.Repo
+  alias Naive.Schema.Settings
 
   @binance_client Application.compile_env(:naive, :binance_client)
 
@@ -157,17 +159,11 @@ defmodule Naive.Leader do
   defp fetch_symbol_settings(symbol) do
     symbol_filters = fetch_symbol_filters(symbol)
 
+    settings = Repo.get_by!(Settings, symbol: symbol)
+
     Map.merge(
-      %{
-        symbol: symbol,
-        chunks: 5,
-        # What is it?
-        buy_down_interval: "0.0001",
-        profit_interval: "-0.0012",
-        rebuy_interval: "0.001",
-        budget: 100
-      },
-      symbol_filters
+      symbol_filters,
+      settings |> Map.from_struct()
     )
   end
 
