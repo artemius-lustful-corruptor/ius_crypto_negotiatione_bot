@@ -28,7 +28,11 @@ defmodule Streamer.MixProject do
     [
       {:websockex, "~> 0.4"},
       {:jason, "~> 1.2"},
-      {:phoenix_pubsub, "~> 2.0"}
+      {:phoenix_pubsub, "~> 2.0"},
+      {:binance, "~> 1.0"},
+      {:ecto_sql, "~> 3.0"},
+      {:ecto_enum, "~> 1.4"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 end

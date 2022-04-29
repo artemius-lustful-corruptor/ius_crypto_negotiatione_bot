@@ -8,10 +8,17 @@ defmodule Streamer.Binance do
   def start_link(symbol) do
     symbol = String.downcase(symbol)
 
+
+    Logger.info(
+      "Binance streamer is connectiong to websocket " <>
+      "stream for #{symbol} trade events"
+    )
+
     WebSockex.start_link(
-      "#{@stream_endpoint}#{symbol}@trade",
+      "#{@stream_endpoint}#{String.downcase(symbol)}@trade",
       __MODULE__,
-      nil
+      nil,
+      name: :"#{__MODULE__}-#{symbol}"
     )
   end
 
