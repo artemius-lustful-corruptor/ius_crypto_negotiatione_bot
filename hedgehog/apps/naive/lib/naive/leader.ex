@@ -42,15 +42,49 @@ defmodule Naive.Leader do
     )
   end
 
+  def notify(:rebuy_triggered, trader_state) do
+    GenServer.call(
+      :"#{__MODULE__}-#{trader_state.symbol}",
+      {:rebuy_triggered, trader_state}
+    )
+  end
+
   def handle_continue(:start_traders, %{symbol: symbol} = state) do
     settings = fetch_symbol_settings(symbol)
     trader_state = fresh_trader_state(settings)
 
-    traders =
-      for _i <- 1..settings.chunks,
-          do: start_new_trader(trader_state)
+    traders = [start_new_trader(trader_state)]
 
     {:noreply, %{state | settings: settings, traders: traders}}
+  end
+
+  def handle_call(
+        {:rebuy_triggered, new_trader_state},
+        {trader_pid, _},
+        %{traders: traders, symbol: symbol, settings: settings} = state
+      ) do
+    case Enum.find_index(traders, &(&1.pid == trader_pid)) do
+      nil ->
+        Logger.warn("Rebuy triggered by trader that leader is not aware of")
+        {:reply, :ok, state}
+
+      index ->
+        old_trader_data = Enum.at(traders, index)
+        new_trader_data = %{old_trader_data | :state => new_trader_state}
+        updated_traders = List.replace_at(traders, index, new_trader_data)
+
+        # How that chunks work?
+        updated_traders =
+          if settings.chunks == length(traders) do
+            Logger.info("All traders already started for #{symbol}")
+            updated_traders
+          else
+            Logger.info("Starting new trader for #{symbol}")
+            [start_new_trader(fresh_trader_state(settings)) | updated_traders]
+          end
+
+        {:reply, :ok, %{state | :traders => updated_traders}}
+    end
   end
 
   def handle_call(
@@ -126,11 +160,12 @@ defmodule Naive.Leader do
     Map.merge(
       %{
         symbol: symbol,
-        chunks: 1,
+        chunks: 5,
         # What is it?
         buy_down_interval: "0.0001",
         profit_interval: "-0.0012",
-        budget: 20
+        rebuy_interval: "0.001",
+        budget: 100
       },
       symbol_filters
     )
@@ -166,7 +201,9 @@ defmodule Naive.Leader do
     %{
       (struct(Trader.State, settings)
        |> IO.inspect())
-      | budget: D.div(settings.budget, settings.chunks)
+      | budget: D.div(settings.budget, settings.chunks),
+        rebuy_notified: false,
+        id: :os.system_time(:millisecond)
     }
   end
 
