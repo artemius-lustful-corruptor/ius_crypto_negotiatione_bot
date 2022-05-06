@@ -9,7 +9,9 @@ defmodule Naive.Leader do
   alias Naive.Schema.Settings
 
   @binance_client Application.compile_env(:naive, :binance_client)
-
+  @type event_type :: atom
+  @callback notify(event_type, %Trader.State{}) :: :ok
+  
   defmodule State do
     defstruct symbol: nil,
               settings: nil,

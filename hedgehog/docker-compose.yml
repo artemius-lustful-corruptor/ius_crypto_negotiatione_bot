@@ -4,7 +4,7 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRESS_PASSWORD: "hedgehogSecretPassword"
+      POSTGRES_PASSWORD: "hedgehogSecretPassword"
     ports:
       - 5432:5432
     volumes:

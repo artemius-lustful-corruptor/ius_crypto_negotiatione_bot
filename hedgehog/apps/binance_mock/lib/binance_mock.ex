@@ -5,6 +5,41 @@ defmodule BinanceMock do
 
   require Logger
 
+  alias Binance.Order
+  alias Binance.OrderResponse
+  alias Core.Struct.TradeEvent
+
+  @type symbol :: binary
+  @type quantity :: binary
+  @type price :: binary
+  @type time_in_force :: binary
+  @type timestamp :: non_neg_integer
+  @type order_id :: non_neg_integer
+  @type orig_client_order_id :: binary
+  @type recv_window :: binary
+
+  @callback order_limit_buy(
+    symbol,
+    quantity,
+    price,
+    time_in_force
+  ) :: {:ok, %OrderResponse{}} | {:error, term}
+
+  @callback order_limit_sell(
+    symbol,
+    quantity,
+    price,
+    time_in_force
+  ) :: {:ok, %OrderResponse{}} | {:error, term}
+
+  @callback get_order(
+    symbol,
+    timestamp,
+    order_id,
+    orig_client_order_id | nil,
+    recv_window | nil
+  ) :: {:ok, %Order{}} | {:error, term}
+
   defmodule State do
     defstruct order_books: %{}, subscriptions: [], fake_order_id: 1
   end
@@ -22,7 +57,10 @@ defmodule BinanceMock do
   end
 
   def get_exchange_info do
-    Binance.get_exchange_info()
+    case Application.get_env(:binance_mock, :use_cached_excange_info) do
+      true -> get_cached_exchange_info()
+      _ -> Binance.get_exchange_info()
+    end
   end
 
   def order_limit_buy(symbol, quantity, price, "GTC") do
@@ -257,5 +295,22 @@ defmodule BinanceMock do
       )
       | transact_time: order.time
     }
+  end
+
+  defp get_cached_exchange_info do
+    {:ok, data} =
+      File.cwd!()
+      |> Path.split()
+      |> Enum.drop(-1)
+      |> Kernel.++([
+        "binance_mock",
+        "test",
+        "assets",
+        "exchange_info.json"
+      ])
+      |> Path.join()
+      |> File.read()
+
+    {:ok, Jason.decode!(data) |> Binance.ExchangeInfo.new()}
   end
 end

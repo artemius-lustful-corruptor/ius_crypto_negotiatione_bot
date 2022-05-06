@@ -11,7 +11,8 @@ defmodule Streamer.MixProject do
       lockfile: "../../mix.lock",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -33,7 +34,14 @@ defmodule Streamer.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:ecto_enum, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
-      {:core, in_umbrella: true}
+      {:core, in_umbrella: true},
+      {:binance_mock, in_umbrella: true}
+    ]
+  end
+
+  defp aliases do
+    [
+      seed: ["run priv/seed_settings.exs"]
     ]
   end
 end

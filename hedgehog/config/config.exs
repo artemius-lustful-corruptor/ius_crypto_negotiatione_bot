@@ -21,6 +21,7 @@ config :data_warehouse, DataWarehouse.Repo,
   hostname: "localhost"
 
 config :streamer,
+  binance_client: BinanceMock,
   ecto_repos: [Streamer.Repo]
 
 config :streamer, Streamer.Repo,
@@ -32,6 +33,7 @@ config :streamer, Streamer.Repo,
 config :naive,
   ecto_repos: [Naive.Repo],
   binance_client: BinanceMock,
+  leader: Test.Naive.LeaderMock,
   trading: %{
     defaults: %{
       chunks: 5,
@@ -48,6 +50,13 @@ config :naive, Naive.Repo,
   password: "hedgehogSecretPassword",
   hostname: "localhost"
 
+config :binance_mock,
+  use_cached_exchange_info: false
+
+config :core,
+  pubsub_client: Phoenix.PubSub,
+  logger: Logger
+
 config :logger,
   level: :debug
 
@@ -55,3 +64,5 @@ if File.exists?('config/secrets.exs') do
   # Rewrite this to use env variables
   import_config('secrets.exs')
 end
+
+import_config "#{config_env()}.exs"

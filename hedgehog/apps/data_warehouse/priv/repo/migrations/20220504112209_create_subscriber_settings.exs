@@ -1,10 +1,8 @@
 defmodule DataWarehouse.Repo.Migrations.CreateSubscriberSettings do
   use Ecto.Migration
 
+  alias DataWarehouse.Schema.SubscriberStatusEnum
 
-  alias Stremer.Schema.StreamingStatusEnum
-
-  
   def change do
     SubscriberStatusEnum.create_type()
 

@@ -18,14 +18,15 @@ defmodule Core.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {Core.Application, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto_sql, "~> 3.0"}
+      {:phoenix_pubsub, "~> 2.0"}
     ]
   end
 end

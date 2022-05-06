@@ -6,7 +6,9 @@ defmodule Hedgehog.MixProject do
       apps_path: "apps",
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases(),
+      consolidate_protocols: Mix.env() == :prod
     ]
   end
 
@@ -17,5 +19,20 @@ defmodule Hedgehog.MixProject do
   # Run "mix help deps" for examples and options.
   defp deps do
     []
+  end
+
+  defp aliases do
+    [
+      setup: [
+        "ecto.drop",
+        "ecto.create",
+        "ecto.migrate",
+        "cmd --app naive --app streamer mix seed"
+      ],
+      "test.integration": [
+        "setup",
+        "test --only integration"
+      ]
+    ]
   end
 end
