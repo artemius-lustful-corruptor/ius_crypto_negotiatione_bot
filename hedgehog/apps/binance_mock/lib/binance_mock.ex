@@ -19,26 +19,26 @@ defmodule BinanceMock do
   @type recv_window :: binary
 
   @callback order_limit_buy(
-    symbol,
-    quantity,
-    price,
-    time_in_force
-  ) :: {:ok, %OrderResponse{}} | {:error, term}
+              symbol,
+              quantity,
+              price,
+              time_in_force
+            ) :: {:ok, %OrderResponse{}} | {:error, term}
 
   @callback order_limit_sell(
-    symbol,
-    quantity,
-    price,
-    time_in_force
-  ) :: {:ok, %OrderResponse{}} | {:error, term}
+              symbol,
+              quantity,
+              price,
+              time_in_force
+            ) :: {:ok, %OrderResponse{}} | {:error, term}
 
   @callback get_order(
-    symbol,
-    timestamp,
-    order_id,
-    orig_client_order_id | nil,
-    recv_window | nil
-  ) :: {:ok, %Order{}} | {:error, term}
+              symbol,
+              timestamp,
+              order_id,
+              orig_client_order_id | nil,
+              recv_window | nil
+            ) :: {:ok, %Order{}} | {:error, term}
 
   defmodule State do
     defstruct order_books: %{}, subscriptions: [], fake_order_id: 1
@@ -78,10 +78,48 @@ defmodule BinanceMock do
     )
   end
 
+  def generate_fake_order(order_id, symbol, quantity, price, side)
+      when is_binary(symbol) and
+             is_binary(quantity) and is_binary(price) and (side == "BUY" or side == "SELL") do
+    current_timestamp = :os.system_time(:millisecond)
+
+    client_order_id = :crypto.hash(:md5, "#{order_id}") |> Base.encode16()
+
+    Binance.Order.new(%{
+      symbol: symbol,
+      order_id: order_id,
+      client_order_id: client_order_id,
+      price: price,
+      orig_qty: quantity,
+      executed_qty: "0.000000",
+      cummulative_quote_qty: "0.000000",
+      status: "NEW",
+      time_in_force: "GTC",
+      type: "LIMIT",
+      side: side,
+      stop_price: "0.000000",
+      iceberg_qty: "0.00000",
+      time: current_timestamp,
+      update_time: current_timestamp,
+      is_working: true
+    })
+  end
+
+  def convert_order_to_order_response(%Binance.Order{} = order) do
+    %{
+      struct(
+        Binance.OrderResponse,
+        order |> Map.to_list()
+      )
+      | transact_time: order.time
+    }
+  end
+
   defp order_limit(symbol, quantity, price, side) do
     %Binance.Order{} =
       fake_order =
       generate_fake_order(
+        GenServer.call(__MODULE__, :generate_id),
         symbol,
         quantity,
         price,
@@ -258,43 +296,6 @@ defmodule BinanceMock do
       end
 
     Map.put(order_books, :"#{symbol}", order_book)
-  end
-
-  defp generate_fake_order(symbol, quantity, price, side)
-       when is_binary(symbol) and
-              is_binary(quantity) and is_binary(price) and (side == "BUY" or side == "SELL") do
-    current_timestamp = :os.system_time(:millisecond)
-    order_id = GenServer.call(__MODULE__, :generate_id)
-    client_order_id = :crypto.hash(:md5, "#{order_id}") |> Base.encode16()
-
-    Binance.Order.new(%{
-      symbol: symbol,
-      order_id: order_id,
-      client_order_id: client_order_id,
-      price: price,
-      orig_qty: quantity,
-      executed_qty: "0.000000",
-      cummulative_quote_qty: "0.000000",
-      status: "NEW",
-      time_in_force: "GTC",
-      type: "LIMIT",
-      side: side,
-      stop_price: "0.000000",
-      iceberg_qty: "0.00000",
-      time: current_timestamp,
-      update_time: current_timestamp,
-      is_working: true
-    })
-  end
-
-  defp convert_order_to_order_response(%Binance.Order{} = order) do
-    %{
-      struct(
-        Binance.OrderResponse,
-        order |> Map.to_list()
-      )
-      | transact_time: order.time
-    }
   end
 
   defp get_cached_exchange_info do

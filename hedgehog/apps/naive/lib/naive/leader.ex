@@ -11,7 +11,7 @@ defmodule Naive.Leader do
   @binance_client Application.compile_env(:naive, :binance_client)
   @type event_type :: atom
   @callback notify(event_type, %Trader.State{}) :: :ok
-  
+
   defmodule State do
     defstruct symbol: nil,
               settings: nil,
@@ -77,7 +77,7 @@ defmodule Naive.Leader do
     {:reply, :ok, %{state | settings: new_settings}}
   end
 
-  #TODO to refactor all IF statements
+  # TODO to refactor all IF statements
   def handle_call(
         {:rebuy_triggered, new_trader_state},
         {trader_pid, _},

@@ -1,6 +1,4 @@
 defmodule Streamer.Schema.Settings do
-
-
   use Ecto.Schema
 
   alias Streamer.Schema.StreamingStatusEnum
@@ -12,5 +10,4 @@ defmodule Streamer.Schema.Settings do
     field(:status, StreamingStatusEnum)
     timestamps()
   end
-
 end

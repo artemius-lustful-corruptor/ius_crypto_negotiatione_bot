@@ -9,10 +9,8 @@
 # move said applications out of the umbrella.
 import Config
 
-
-
 config :data_warehouse,
-ecto_repos: [DataWarehouse.Repo]
+  ecto_repos: [DataWarehouse.Repo]
 
 config :data_warehouse, DataWarehouse.Repo,
   database: "data_warehouse",

@@ -8,10 +8,9 @@ defmodule Streamer.Binance do
   def start_link(symbol) do
     symbol = String.downcase(symbol)
 
-
     Logger.info(
       "Binance streamer is connectiong to websocket " <>
-      "stream for #{symbol} trade events"
+        "stream for #{symbol} trade events"
     )
 
     WebSockex.start_link(
@@ -28,7 +27,7 @@ defmodule Streamer.Binance do
       {:error, _} -> Logger.error("Unable to parse msg: #{msg}")
     end
 
-    #IO.puts("Received Message - Type: #{inspect(type)} -- Message: #{inspect(msg)}")
+    # IO.puts("Received Message - Type: #{inspect(type)} -- Message: #{inspect(msg)}")
 
     {:ok, state}
   end

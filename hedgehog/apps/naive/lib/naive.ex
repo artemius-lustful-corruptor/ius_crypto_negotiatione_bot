@@ -7,7 +7,6 @@ defmodule Naive do
 
   alias Naive.DynamicSymbolSupervisor
 
-
   def start_trading(symbol) do
     symbol
     |> String.upcase()
@@ -25,7 +24,7 @@ defmodule Naive do
     |> String.upcase()
     |> DynamicSymbolSupervisor.shutdown_worker()
   end
-  
+
   def send_event(%TradeEvent{} = event) do
     GenServer.cast(:trader, event)
   end

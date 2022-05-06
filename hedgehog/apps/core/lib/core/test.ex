@@ -1,6 +1,4 @@
 defmodule Core.Test do
-
-
   defmodule PubSub do
     @type t :: atom
     @type topic :: binary
@@ -14,5 +12,4 @@ defmodule Core.Test do
     @type message :: binary
     @callback info(message) :: :ok
   end
-  
 end

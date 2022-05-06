@@ -42,7 +42,6 @@ defmodule DataWarehouse.Subscriber.DynamicSupervisor do
   end
 
   defp update_status(topic, status) when is_binary(topic) and is_binary(status) do
-
     %SubscriberSettings{
       topic: topic,
       status: status
@@ -51,7 +50,6 @@ defmodule DataWarehouse.Subscriber.DynamicSupervisor do
       on_conflict: :replace_all,
       conflict_target: :topic
     )
-
   end
 
   def stop_child(args) do
@@ -60,5 +58,4 @@ defmodule DataWarehouse.Subscriber.DynamicSupervisor do
       _ -> Logger.warn("Unable to locate process assigned to #{inspect(args)}")
     end
   end
-
 end
