@@ -30,7 +30,7 @@ defmodule DataWarehouse.MixProject do
       {:ecto_enum, "~> 1.4"},
       {:phoenix_pubsub, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:streamer, in_umbrella: true}
+      {:core, in_umbrella: true}
     ]
   end
 end

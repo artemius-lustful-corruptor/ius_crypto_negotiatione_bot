@@ -3,7 +3,7 @@ defmodule Naive.Trader do
 
   require Logger
 
-  alias Streamer.Binance.TradeEvent
+  alias Core.Struct.TradeEvent
   alias Decimal, as: D
 
   @binance_client Application.compile_env(:naive, :binance_client)
@@ -89,7 +89,7 @@ defmodule Naive.Trader do
   end
 
   def handle_info(
-        %Streamer.Binance.TradeEvent{
+        %Core.Struct.TradeEvent{
           buyer_order_id: order_id
         },
         %State{
@@ -300,7 +300,7 @@ defmodule Naive.Trader do
 
   defp broadcast_order(%Binance.Order{} = order) do
     @pubsub_client.broadcast(
-      Streamer.PubSub,
+      Core.PubSub,
       "ORDERS:#{order.symbol}",
       order
     )

@@ -3,7 +3,7 @@ defmodule Naive do
   Documentation for `Naive`.
   """
 
-  alias Streamer.Binance.TradeEvent
+  alias Core.Struct.TradeEvent
 
   alias Naive.DynamicSymbolSupervisor
 

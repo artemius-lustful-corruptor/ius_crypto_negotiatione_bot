@@ -3,7 +3,7 @@ defmodule NaiveTest do
 
   alias DataWarehouse.Schema.Order
   alias Naive.Schema.Settings, as: TradingSettings
-  alias Streamer.Binance.TradeEvent
+  alias Core.Struct.TradeEvent
 
   import Ecto.Query, only: [from: 2]
 

@@ -26,7 +26,7 @@ defmodule DataWarehouse.Publisher do
       "#{to}T23:59:59.000Z"
       |> convert_to_ms()
 
-    DateWarehouse.Repo.transaction(
+    DataWarehouse.Repo.transaction(
       fn ->
         from(
           te in DataWarehouse.Schema.TradeEvent,
@@ -57,12 +57,12 @@ defmodule DataWarehouse.Publisher do
   defp publish_trade_event(%DataWarehouse.Schema.TradeEvent{} = trade_event) do
     new_trade_event =
       struct(
-        Streamer.Binance.TradeEvent,
+        Core.Struct.TradeEvent,
         trade_event |> Map.to_list() |> IO.inspect()
       )
 
     Phoenix.PubSub.broadcast(
-      Streamer.PubSub,
+      Core.PubSub,
       "TRADE_EVENTS:#{trade_event.symbol}",
       new_trade_event
     )

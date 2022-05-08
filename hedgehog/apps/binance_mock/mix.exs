@@ -30,7 +30,7 @@ defmodule BinanceMock.MixProject do
       {:decimal, "~> 2.0"},
       {:phoenix_pubsub, "~> 2.0"},
       {:jason, "~> 1.2"},
-      {:streamer, in_umbrella: true}
+      {:core, in_umbrella: true}
     ]
   end
 end

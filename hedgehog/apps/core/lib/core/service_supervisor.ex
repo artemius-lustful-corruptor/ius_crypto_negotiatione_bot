@@ -2,6 +2,9 @@ defmodule Core.ServiceSupervisor do
   require Logger
   import Ecto.Query, only: [from: 2]
 
+  defdelegate start_link(module, args, opts), to: DynamicSupervisor
+  defdelegate init(opts), to: DynamicSupervisor
+
   defmacro __using__(opts) do
     {:ok, repo} = Keyword.fetch(opts, :repo)
     {:ok, schema} = Keyword.fetch(opts, :schema)
@@ -11,9 +14,6 @@ defmodule Core.ServiceSupervisor do
     # FIXME what is location: :keep???
     quote location: :keep do
       use DynamicSupervisor
-
-      defdelegate start_link(module, args, opts), to: DynamicSupervisor
-      defdelegate init(opts), to: DynamicSupervisor
 
       def autostart_workers do
         Core.ServiceSupervisor.autostart_workers(

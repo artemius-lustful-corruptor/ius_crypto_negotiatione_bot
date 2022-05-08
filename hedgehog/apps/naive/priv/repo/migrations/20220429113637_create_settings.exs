@@ -4,6 +4,8 @@ defmodule Naive.Repo.Migrations.CreateSettings do
   alias Naive.Schema.TradingStatusEnum
 
   def change do
+    TradingStatusEnum.create_type()
+    
     create table(:settings, primary_key: false) do
       add(:id, :uuid, primary_key: true)
       add(:symbol, :text, null: false)

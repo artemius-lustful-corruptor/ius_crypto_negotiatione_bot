@@ -21,7 +21,7 @@ defmodule Streamer.Binance do
     )
   end
 
-  def handle_frame({type, msg}, state) do
+  def handle_frame({_type, msg}, state) do
     case Jason.decode(msg) do
       {:ok, event} -> process_event(event)
       {:error, _} -> Logger.error("Unable to parse msg: #{msg}")
@@ -33,7 +33,7 @@ defmodule Streamer.Binance do
   end
 
   defp process_event(%{"e" => "trade"} = event) do
-    trade_event = %Streamer.Binance.TradeEvent{
+    trade_event = %Core.Struct.TradeEvent{
       :event_type => event["e"],
       :event_time => event["E"],
       :symbol => event["s"],

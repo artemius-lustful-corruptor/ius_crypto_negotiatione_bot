@@ -1,7 +1,7 @@
 defmodule Streamer.Repo.Migrations.CreateSettings do
   use Ecto.Migration
 
-  alias Stremer.Schema.StreamingStatusEnum
+  alias Streamer.Schema.StreamingStatusEnum
 
   
   def change do

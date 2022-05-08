@@ -35,7 +35,6 @@ defmodule Naive.MixProject do
       {:ecto_enum, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
       {:mox, "~> 1.0", only: [:test, :integration]},
-      {:streamer, in_umbrella: true},
       {:core, in_umbrella: true},
       {:data_warehouse, in_umbrella: true, only: :test}
     ]
