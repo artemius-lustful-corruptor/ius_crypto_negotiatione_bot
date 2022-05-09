@@ -239,11 +239,8 @@ defmodule Naive.Leader do
   end
 
   defp fresh_trader_state(settings) do
-    IO.inspect(settings)
-
     %{
-      (struct(Trader.State, settings)
-       |> IO.inspect())
+      struct(Trader.State, settings)
       | budget: D.div(settings.budget, settings.chunks),
         rebuy_notified: false,
         id: :os.system_time(:millisecond)

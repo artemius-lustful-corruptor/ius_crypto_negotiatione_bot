@@ -9,7 +9,7 @@ defmodule Streamer.Binance do
     symbol = String.downcase(symbol)
 
     Logger.info(
-      "Binance streamer is connectiong to websocket " <>
+      "Binance streamer is connecting to websocket " <>
         "stream for #{symbol} trade events"
     )
 

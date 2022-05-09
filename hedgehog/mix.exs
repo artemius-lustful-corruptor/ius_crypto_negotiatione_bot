@@ -10,7 +10,7 @@ defmodule Hedgehog.MixProject do
       aliases: aliases(),
       consolidate_protocols: Mix.env() == :prod,
       preferred_cli_env: [
-        "test.unit": :test
+        "test.unit": :test,
       ]
     ]
   end

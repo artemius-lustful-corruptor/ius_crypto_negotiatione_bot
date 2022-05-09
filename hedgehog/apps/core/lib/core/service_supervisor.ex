@@ -11,6 +11,8 @@ defmodule Core.ServiceSupervisor do
     {:ok, module} = Keyword.fetch(opts, :module)
     {:ok, worker_module} = Keyword.fetch(opts, :worker_module)
 
+    IO.inspect({repo, schema, module, worker_module})
+    
     # FIXME what is location: :keep???
     quote location: :keep do
       use DynamicSupervisor

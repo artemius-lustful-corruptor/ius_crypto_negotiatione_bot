@@ -80,6 +80,7 @@ defmodule Naive.Trader do
     {:ok, %Binance.OrderResponse{} = order} =
       @binance_client.order_limit_buy(symbol, quantity, new_price, "GTC")
 
+    IO.inspect(order)
     :ok = broadcast_order(order)
 
     new_state = %{state | buy_order: order}
@@ -89,7 +90,7 @@ defmodule Naive.Trader do
   end
 
   def handle_info(
-        %Core.Struct.TradeEvent{
+        %TradeEvent{
           buyer_order_id: order_id
         },
         %State{
@@ -187,6 +188,7 @@ defmodule Naive.Trader do
     else
       @logger.info("Trader's (#{id} #{symbol}) SELL order got partially filled")
       new_state = %{state | sell_order: sell_order}
+      # @leader.notify(:trader_state_updated, new_state) #FIXME
       {:noreply, new_state}
     end
   end
@@ -279,17 +281,14 @@ defmodule Naive.Trader do
 
   defp calculate_quantity(budget, price, step_size) do
     exact_target_quantity = D.div(budget, price)
-    IO.inspect(step_size)
 
     D.to_string(
       D.mult(
-        # how it works?
         D.div_int(exact_target_quantity, step_size),
         step_size
       ),
       :normal
     )
-    |> IO.inspect()
   end
 
   defp broadcast_order(%Binance.OrderResponse{} = response) do

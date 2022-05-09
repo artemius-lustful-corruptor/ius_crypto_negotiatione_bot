@@ -6,4 +6,4 @@ config :naive,
 
 config :core,
   pubsub_client: Test.PubSubMock,
-  logger: Test.PubSubMock
+  logger: Test.LoggerMock

@@ -16,7 +16,7 @@ defmodule Naive do
   def stop_trading(symbol) do
     symbol
     |> String.upcase()
-    |> DynamicSymbolSupervisor.stop_workers()
+    |> DynamicSymbolSupervisor.stop_worker()
   end
 
   def shutdown_trading(symbol) do

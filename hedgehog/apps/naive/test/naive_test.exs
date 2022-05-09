@@ -8,7 +8,6 @@ defmodule NaiveTest do
   import Ecto.Query, only: [from: 2]
 
   @tag integration: true
-
   test "Naive trader full trade(buy + sell) test" do
     symbol = "XRPUSDT"
 
@@ -27,7 +26,7 @@ defmodule NaiveTest do
 
     Naive.start_trading(symbol)
 
-    DataWarehouse.start_storing("ORDERS", "XRPUSDT")
+    DataWarehouse.start_storing("ORDERS", symbol)
     :timer.sleep(5000)
 
     [

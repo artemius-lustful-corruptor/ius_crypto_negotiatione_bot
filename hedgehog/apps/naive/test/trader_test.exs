@@ -1,6 +1,5 @@
 defmodule Naive.TraderTest do
   use ExUnit.Case
-  doctest Naive.Trader
 
   import Mox
 
@@ -9,14 +8,13 @@ defmodule Naive.TraderTest do
 
   # What is it?
   @tag :unit
-
   test "Placing buy order test" do
     Test.PubSubMock
     |> expect(:subscribe, fn _module, "TRADE_EVENTS:XRPUSDT" -> :ok end)
     |> expect(:broadcast, fn _module, "ORDERS:XRPUSDT", _order -> :ok end)
 
     Test.BinanceMock
-    |> expect(:order_limit_buy, fn "XRPUSDT", "464.360", "0.4307", "GTC" ->
+    |> expect(:order_limit_buy, fn "XRPUSDT", "463.145", "0.4307", "GTC" ->
       {:ok,
        BinanceMock.generate_fake_order(
          "12345",
@@ -43,6 +41,7 @@ defmodule Naive.TraderTest do
 
     {:ok, trader_pid} = Naive.Trader.start_link(trader_state)
     send(trader_pid, trade_event)
+    assert_receive :ok
   end
 
   defp dummy_trader_state() do
