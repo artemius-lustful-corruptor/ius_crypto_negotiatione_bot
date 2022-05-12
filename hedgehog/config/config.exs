@@ -56,7 +56,7 @@ config :core,
   logger: Logger
 
 config :logger,
-  level: :debug
+  level: :info
 
 if File.exists?('config/secrets.exs') do
   # Rewrite this to use env variables

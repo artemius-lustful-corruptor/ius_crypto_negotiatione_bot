@@ -41,6 +41,12 @@ defmodule DataWarehouse.Subscriber.DynamicSupervisor do
     start_child(topic)
   end
 
+  def stop_worker(topic) do
+    Logger.info("Stopping storing data from #{topic} topic")
+    update_status(topic, "off")
+    stop_child(topic)
+  end
+
   defp update_status(topic, status) when is_binary(topic) and is_binary(status) do
     %SubscriberSettings{
       topic: topic,

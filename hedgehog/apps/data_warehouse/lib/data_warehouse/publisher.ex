@@ -58,7 +58,7 @@ defmodule DataWarehouse.Publisher do
     new_trade_event =
       struct(
         Core.Struct.TradeEvent,
-        trade_event |> Map.to_list() |> IO.inspect()
+        trade_event |> Map.to_list()
       )
 
     Phoenix.PubSub.broadcast(

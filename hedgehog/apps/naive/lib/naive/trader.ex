@@ -80,7 +80,7 @@ defmodule Naive.Trader do
     {:ok, %Binance.OrderResponse{} = order} =
       @binance_client.order_limit_buy(symbol, quantity, new_price, "GTC")
 
-    IO.inspect(order)
+    #IO.inspect(order)
     :ok = broadcast_order(order)
 
     new_state = %{state | buy_order: order}

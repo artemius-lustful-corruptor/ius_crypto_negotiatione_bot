@@ -83,6 +83,8 @@ defmodule Naive.Leader do
         {trader_pid, _},
         %{traders: traders, symbol: symbol, settings: settings} = state
       ) do
+    IO.inspect(trader_pid)
+
     case Enum.find_index(traders, &(&1.pid == trader_pid)) do
       nil ->
         Logger.warn("Rebuy triggered by trader that leader is not aware of")
@@ -94,6 +96,11 @@ defmodule Naive.Leader do
         updated_traders = List.replace_at(traders, index, new_trader_data)
 
         # How that chunks work?
+        IO.inspect({
+          settings.chunks,
+          length(traders)
+        })
+
         updated_traders =
           if settings.chunks == length(traders) do
             Logger.info("All traders already started for #{symbol}")
@@ -252,7 +259,7 @@ defmodule Naive.Leader do
       DynamicSupervisor.start_child(
         :"Naive.DynamicTraderSupervisor-#{state.symbol}",
         {Naive.Trader, state}
-      )
+      ) |> IO.inspect()
 
     ref = Process.monitor(pid)
 

@@ -17,7 +17,7 @@ defmodule Streamer.Binance do
       "#{@stream_endpoint}#{String.downcase(symbol)}@trade",
       __MODULE__,
       nil,
-      name: :"#{__MODULE__}-#{symbol}"
+      name: via_tuple(symbol)
     )
   end
 
@@ -26,8 +26,6 @@ defmodule Streamer.Binance do
       {:ok, event} -> process_event(event)
       {:error, _} -> Logger.error("Unable to parse msg: #{msg}")
     end
-
-    # IO.puts("Received Message - Type: #{inspect(type)} -- Message: #{inspect(msg)}")
 
     {:ok, state}
   end
@@ -52,9 +50,13 @@ defmodule Streamer.Binance do
     )
 
     Phoenix.PubSub.broadcast(
-      Streamer.PubSub,
+      Core.PubSub,
       "TRADE_EVENTS:#{trade_event.symbol}",
       trade_event
     )
+  end
+
+  defp via_tuple(symbol) do
+    {:via, Registry, {:binance_streamers, symbol}}
   end
 end
