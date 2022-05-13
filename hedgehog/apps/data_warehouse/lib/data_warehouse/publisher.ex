@@ -28,8 +28,7 @@ defmodule DataWarehouse.Publisher do
 
     DataWarehouse.Repo.transaction(
       fn ->
-        from(
-          te in DataWarehouse.Schema.TradeEvent,
+        from(te in DataWarehouse.Schema.TradeEvent,
           where:
             te.symbol == ^symbol and
               te.trade_time >= ^from_ts and

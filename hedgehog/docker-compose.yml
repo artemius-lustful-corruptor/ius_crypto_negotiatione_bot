@@ -9,3 +9,6 @@ services:
       - 5432:5432
     volumes:
       - ../postgres-data:/var/lib/postgresql/data
+  # app:
+  #  image: elixir:1.10
+  #  command: mix ecto.create && mix ecto.migrate && iex -S mix

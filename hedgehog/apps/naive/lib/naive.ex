@@ -24,8 +24,4 @@ defmodule Naive do
     |> String.upcase()
     |> DynamicSymbolSupervisor.shutdown_worker()
   end
-
-  def send_event(%TradeEvent{} = event) do
-    GenServer.cast(:trader, event)
-  end
 end

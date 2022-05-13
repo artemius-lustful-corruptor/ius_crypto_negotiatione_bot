@@ -4,7 +4,6 @@ defmodule Naive.SymbolSupervisor do
   require Logger
 
   def start_link(symbol) do
-    IO.inspect("Naive.SymbolSupervisor start")
     Supervisor.start_link(
       __MODULE__,
       symbol,

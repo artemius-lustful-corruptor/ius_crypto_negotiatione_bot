@@ -79,8 +79,11 @@ defmodule BinanceMock do
   end
 
   def generate_fake_order(order_id, symbol, quantity, price, side)
-      when is_binary(symbol) and
-             is_binary(quantity) and is_binary(price) and (side == "BUY" or side == "SELL") do
+  when is_binary(symbol) and
+  is_binary(quantity) and
+  is_binary(price) and
+  (side == "BUY" or side == "SELL") do
+
     current_timestamp = :os.system_time(:millisecond)
 
     client_order_id = :crypto.hash(:md5, "#{order_id}") |> Base.encode16()
@@ -91,14 +94,14 @@ defmodule BinanceMock do
       client_order_id: client_order_id,
       price: price,
       orig_qty: quantity,
-      executed_qty: "0.000000",
-      cummulative_quote_qty: "0.000000",
+      executed_qty: "0.00000000",
+      cummulative_quote_qty: "0.00000000",
       status: "NEW",
       time_in_force: "GTC",
       type: "LIMIT",
       side: side,
-      stop_price: "0.000000",
-      iceberg_qty: "0.00000",
+      stop_price: "0.00000000",
+      iceberg_qty: "0.00000000",
       time: current_timestamp,
       update_time: current_timestamp,
       is_working: true
@@ -175,8 +178,14 @@ defmodule BinanceMock do
       )
 
     result =
-      (order_book.buy_side ++ order_book.sell_side ++ order_book.historical)
-      |> Enum.find(&(&1.symbol == symbol and &1.time == time and &1.order_id == order_id))
+    (order_book.buy_side ++
+      order_book.sell_side ++
+      order_book.historical)
+      |> Enum.find(
+      &(&1.symbol == symbol and
+        &1.time == time and
+        &1.order_id == order_id)
+    )
 
     {:reply, {:ok, result}, state}
   end
@@ -215,11 +224,16 @@ defmodule BinanceMock do
       |> Enum.drop(length(filled_sell_orders))
 
     order_books =
-      Map.replace!(order_books, :"#{trade_event.symbol}", %{
+      Map.replace!(order_books,
+        :"#{trade_event.symbol}", %{
         buy_side: remaining_buy_orders,
         sell_side: remaining_sell_orders,
-        historical: filled_buy_orders ++ filled_sell_orders ++ order_book.historical
-      })
+        historical:
+        filled_buy_orders ++
+          filled_sell_orders ++
+          order_book.historical
+        }
+      )
 
     {:noreply, %{state | order_books: order_books}}
   end

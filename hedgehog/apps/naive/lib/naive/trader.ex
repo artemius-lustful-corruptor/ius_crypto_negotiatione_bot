@@ -7,9 +7,9 @@ defmodule Naive.Trader do
   alias Decimal, as: D
 
   @binance_client Application.compile_env(:naive, :binance_client)
-  @leader Application.get_env(:naive, :leader)
-  @pubsub_client Application.get_env(:core, :pubsub_client)
-  @logger Application.get_env(:core, :logger)
+  @leader Application.compile_env(:naive, :leader)
+  @pubsub_client Application.compile_env(:core, :pubsub_client)
+  @logger Application.compile_env(:core, :logger)
 
   defmodule State do
     @enforce_keys [
@@ -80,7 +80,7 @@ defmodule Naive.Trader do
     {:ok, %Binance.OrderResponse{} = order} =
       @binance_client.order_limit_buy(symbol, quantity, new_price, "GTC")
 
-    #IO.inspect(order)
+    # IO.inspect(order)
     :ok = broadcast_order(order)
 
     new_state = %{state | buy_order: order}
@@ -188,7 +188,8 @@ defmodule Naive.Trader do
     else
       @logger.info("Trader's (#{id} #{symbol}) SELL order got partially filled")
       new_state = %{state | sell_order: sell_order}
-      # @leader.notify(:trader_state_updated, new_state) #FIXME
+      # FIXME
+      @leader.notify(:trader_state_updated, new_state)
       {:noreply, new_state}
     end
   end
