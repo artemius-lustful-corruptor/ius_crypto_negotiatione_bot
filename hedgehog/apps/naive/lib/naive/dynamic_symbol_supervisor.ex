@@ -10,8 +10,8 @@ defmodule Naive.DynamicSymbolSupervisor do
 
   import Ecto.Query, only: [from: 2]
 
-  def start_link(init_arg) do
-    DynamicSupervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+  def start_link(_init_arg) do
+    DynamicSupervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def init(_init_arg) do

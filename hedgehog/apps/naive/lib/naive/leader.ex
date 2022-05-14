@@ -83,9 +83,9 @@ defmodule Naive.Leader do
         {trader_pid, _},
         %{traders: traders, symbol: symbol, settings: settings} = state
       ) do
-    IO.inspect({new_trader_state, trader_pid, traders, symbol, settings})
-
-    case Enum.find_index(traders, &(&1.pid == trader_pid)) |> IO.inspect() do
+    #IO.inspect({new_trader_state, trader_pid, traders, symbol, settings})
+    #IO.inspect(new_trader_state)
+    case Enum.find_index(traders, &(&1.pid == trader_pid)) do
       nil ->
         Logger.warn("Rebuy triggered by trader that leader is not aware of")
         {:reply, :ok, state}
@@ -100,7 +100,7 @@ defmodule Naive.Leader do
         #  settings.chunks,
         #  length(traders)
         # })
-        IO.inspect(settings)
+        #IO.inspect(settings)
 
         updated_traders =
           if settings.chunks == length(traders) do
@@ -253,7 +253,6 @@ defmodule Naive.Leader do
         rebuy_notified: false,
         id: :os.system_time(:millisecond)
     }
-    |> IO.inspect()
   end
 
   defp start_new_trader(%Trader.State{} = state) do

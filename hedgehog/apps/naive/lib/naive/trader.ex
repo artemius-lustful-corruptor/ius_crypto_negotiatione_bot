@@ -40,7 +40,8 @@ defmodule Naive.Trader do
   end
 
   def start_link(%State{} = state) do
-    GenServer.start_link(__MODULE__, state, name: :trader)
+    #IO.inspect("Trying to start trader")
+    GenServer.start_link(__MODULE__, state)
   end
 
   def init(%State{id: id, symbol: symbol} = state) do

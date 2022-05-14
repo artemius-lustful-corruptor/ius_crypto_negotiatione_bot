@@ -11,6 +11,17 @@ defmodule Hedgehog.MixProject do
       consolidate_protocols: Mix.env() == :prod,
       preferred_cli_env: [
         "test.unit": :test,
+      ],
+      releases: [
+        hedgehog_umbrella: [
+          applications: [
+            streamer: :permanent,
+            naive: :permanent,
+            data_warehouse: :permanent,
+            core: :permanent,
+            binance_mock: :permanent
+          ]
+        ]
       ]
     ]
   end
@@ -23,6 +34,7 @@ defmodule Hedgehog.MixProject do
   defp deps do
     []
   end
+
 
   defp aliases do
     [

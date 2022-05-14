@@ -3,7 +3,6 @@ defmodule Naive do
   Documentation for `Naive`.
   """
 
-  alias Core.Struct.TradeEvent
 
   alias Naive.DynamicSymbolSupervisor
 
