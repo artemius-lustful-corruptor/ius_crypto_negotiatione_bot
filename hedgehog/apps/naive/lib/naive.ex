@@ -3,7 +3,6 @@ defmodule Naive do
   Documentation for `Naive`.
   """
 
-
   alias Naive.DynamicSymbolSupervisor
 
   def start_trading(symbol) do
@@ -22,5 +21,11 @@ defmodule Naive do
     symbol
     |> String.upcase()
     |> DynamicSymbolSupervisor.shutdown_worker()
+  end
+
+  def seed() do
+    :code.priv_dir(:naive)
+    |> Path.join("seed_settings.exs")
+    |> Code.eval_file()
   end
 end

@@ -16,4 +16,10 @@ defmodule Streamer do
     |> String.upcase()
     |> DynamicStreamerSupervisor.stop_worker()
   end
+
+  def seed() do
+    :code.priv_dir(:streamer)
+    |> Path.join("seed_settings.exs")
+    |> Code.eval_file()
+  end
 end

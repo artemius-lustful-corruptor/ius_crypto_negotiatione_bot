@@ -1,0 +1,7 @@
+defmodule Naive.Repo.Migrations.SeedSettings do
+  use Ecto.Migration
+
+  def  do
+
+  end
+end

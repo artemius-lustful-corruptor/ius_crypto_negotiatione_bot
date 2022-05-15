@@ -16,7 +16,7 @@ config :data_warehouse, DataWarehouse.Repo,
   database: "data_warehouse",
   username: "postgres",
   password: "hedgehogSecretPassword",
-  hostname: "localhost"
+  hostname: "postgres"
 
 config :streamer,
   binance_client: BinanceMock,
@@ -26,7 +26,7 @@ config :streamer, Streamer.Repo,
   database: "streamer",
   username: "postgres",
   password: "hedgehogSecretPassword",
-  hostname: "localhost"
+  hostname: "postgres"
 
 config :naive,
   ecto_repos: [Naive.Repo],
@@ -46,7 +46,7 @@ config :naive, Naive.Repo,
   database: "naive",
   username: "postgres",
   password: "hedgehogSecretPassword",
-  hostname: "localhost"
+  hostname: "postgres"
 
 config :binance_mock,
   use_cached_exchange_info: false
