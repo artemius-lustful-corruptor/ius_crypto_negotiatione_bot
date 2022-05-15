@@ -53,7 +53,6 @@ defmodule Naive.Trader do
       Core.PubSub,
       "TRADE_EVENTS:#{symbol}"
     )
-
     {:ok, state}
   end
 
@@ -69,7 +68,14 @@ defmodule Naive.Trader do
           step_size: step_size
         } = state
       ) do
-    quantity = calculate_quantity(budget, price, step_size)
+
+    IO.inspect(budget)
+
+    #TODO Questions
+    #1. How to impact budget and quantity and step_size
+   
+
+    quantity = calculate_quantity(budget, price, step_size) |> IO.inspect()
 
     new_price = calculate_buy_price(price, buy_down_interval, tick_size)
 
@@ -81,7 +87,7 @@ defmodule Naive.Trader do
     {:ok, %Binance.OrderResponse{} = order} =
       @binance_client.order_limit_buy(symbol, quantity, new_price, "GTC")
 
-    # IO.inspect(order)
+    IO.inspect(order)
     :ok = broadcast_order(order)
 
     new_state = %{state | buy_order: order}
