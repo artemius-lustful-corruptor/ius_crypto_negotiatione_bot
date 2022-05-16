@@ -83,8 +83,6 @@ defmodule Naive.Leader do
         {trader_pid, _},
         %{traders: traders, symbol: symbol, settings: settings} = state
       ) do
-    #IO.inspect({new_trader_state, trader_pid, traders, symbol, settings})
-    #IO.inspect(new_trader_state)
     case Enum.find_index(traders, &(&1.pid == trader_pid)) do
       nil ->
         Logger.warn("Rebuy triggered by trader that leader is not aware of")
@@ -94,13 +92,6 @@ defmodule Naive.Leader do
         old_trader_data = Enum.at(traders, index)
         new_trader_data = %{old_trader_data | :state => new_trader_state}
         updated_traders = List.replace_at(traders, index, new_trader_data)
-
-        # How that chunks work?
-        # IO.inspect({
-        #  settings.chunks,
-        #  length(traders)
-        # })
-        #IO.inspect(settings)
 
         updated_traders =
           if settings.chunks == length(traders) do

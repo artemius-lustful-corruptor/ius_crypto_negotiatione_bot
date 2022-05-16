@@ -1,4 +1,4 @@
-defmodule Hedgehog.MixProject do
+defmodule IusCryptoNegotiationeBot.MixProject do
   use Mix.Project
 
   def project do
@@ -10,10 +10,10 @@ defmodule Hedgehog.MixProject do
       aliases: aliases(),
       consolidate_protocols: Mix.env() == :prod,
       preferred_cli_env: [
-        "test.unit": :test,
+        "test.unit": :test
       ],
       releases: [
-        hedgehog_umbrella: [
+        ius_crypto_negotiatione_bot_umbrella: [
           applications: [
             streamer: :permanent,
             naive: :permanent,
@@ -34,7 +34,6 @@ defmodule Hedgehog.MixProject do
   defp deps do
     []
   end
-
 
   defp aliases do
     [

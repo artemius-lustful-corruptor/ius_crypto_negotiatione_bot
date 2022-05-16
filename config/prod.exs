@@ -6,13 +6,11 @@ config :naive,
 config :streamer,
   binance_client: Binance
 
-
 config :data_warehouse, DataWarehouse.Repo,
   database: "data_warehouse",
   username: "postgres",
   password: "hedgehogSecretPassword",
   hostname: "db"
-
 
 config :streamer, Streamer.Repo,
   database: "streamer",

@@ -40,7 +40,6 @@ defmodule Naive.Trader do
   end
 
   def start_link(%State{} = state) do
-    #IO.inspect("Trying to start trader")
     GenServer.start_link(__MODULE__, state)
   end
 
@@ -69,13 +68,7 @@ defmodule Naive.Trader do
         } = state
       ) do
 
-    IO.inspect(budget)
-
-    #TODO Questions
-    #1. How to impact budget and quantity and step_size
-   
-
-    quantity = calculate_quantity(budget, price, step_size) |> IO.inspect()
+    quantity = calculate_quantity(budget, price, step_size)
 
     new_price = calculate_buy_price(price, buy_down_interval, tick_size)
 
@@ -87,7 +80,6 @@ defmodule Naive.Trader do
     {:ok, %Binance.OrderResponse{} = order} =
       @binance_client.order_limit_buy(symbol, quantity, new_price, "GTC")
 
-    IO.inspect(order)
     :ok = broadcast_order(order)
 
     new_state = %{state | buy_order: order}
