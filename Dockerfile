@@ -12,6 +12,6 @@ RUN apt-get update -y && \
                                    apt-get install -y esl-erlang && \ 
                                    apt-get install -y elixir
 
-COPY ./_build/dev/rel ./rel
+COPY ./_build/prod/rel ./rel
 
 CMD ["/bin/bash"]
