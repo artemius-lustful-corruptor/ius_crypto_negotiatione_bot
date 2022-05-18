@@ -18,7 +18,7 @@ defmodule DataWarehouse.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :confex],
       mod: {DataWarehouse.Application, []}
     ]
   end
@@ -30,7 +30,8 @@ defmodule DataWarehouse.MixProject do
       {:ecto_enum, "~> 1.4"},
       {:phoenix_pubsub, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:core, in_umbrella: true}
+      {:core, in_umbrella: true},
+      {:confex, "~> 3.5.0"}
     ]
   end
 end

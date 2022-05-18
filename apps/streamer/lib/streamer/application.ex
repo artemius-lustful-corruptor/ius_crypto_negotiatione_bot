@@ -10,7 +10,6 @@ defmodule Streamer.Application do
       {Streamer.Repo, []},
       {Streamer.Supervisor, []}
     ]
-
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Streamer.Application]

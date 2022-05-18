@@ -19,7 +19,7 @@ defmodule Naive.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :confex],
       mod: {Naive.Application, []}
     ]
   end
@@ -36,7 +36,8 @@ defmodule Naive.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:mox, "~> 1.0", only: [:test, :integration]},
       {:core, in_umbrella: true},
-      {:data_warehouse, in_umbrella: true, only: :test}
+      {:data_warehouse, in_umbrella: true, only: :test},
+      {:confex, "~> 3.5.0"}
     ]
   end
 

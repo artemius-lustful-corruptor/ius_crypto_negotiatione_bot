@@ -9,9 +9,9 @@ RUN apt-get install -y wget gnupg2 inotify-tools locales && \
 
 RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && dpkg -i erlang-solutions_2.0_all.deb
 RUN apt-get update -y && \
-                                   apt-get install -y esl-erlang && \ 
-                                   apt-get install -y elixir
+    apt-get install -y esl-erlang && \ 
+    apt-get install -y elixir
 
 COPY ./_build/prod/rel ./rel
-
-CMD ["/bin/bash"]
+COPY ./start ./bin
+CMD ["./bin/start"]

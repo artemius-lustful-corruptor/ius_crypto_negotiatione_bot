@@ -34,7 +34,7 @@ config :naive,
   leader: Naive.Leader,
   trading: %{
     defaults: %{
-      chunks: 2,
+      chunks: 3,
       budget: 800,
       buy_down_interval: "0.0001",
       profit_interval: "-0.0012",

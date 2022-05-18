@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "Starting app..."
+/rel/ius_crypto_negotiatione_bot_umbrella/bin/ius_crypto_negotiatione_bot_umbrella start

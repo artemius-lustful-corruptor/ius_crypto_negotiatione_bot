@@ -19,7 +19,7 @@ defmodule Streamer.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :confex],
       mod: {Streamer.Application, []}
     ]
   end
@@ -35,7 +35,8 @@ defmodule Streamer.MixProject do
       {:ecto_enum, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
       {:core, in_umbrella: true},
-      {:binance_mock, in_umbrella: true}
+      {:binance_mock, in_umbrella: true},
+      {:confex, "~> 3.5.0"}
     ]
   end
 
